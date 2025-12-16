@@ -3,16 +3,15 @@ import json
 import os
 
 def read_and_clean_csv():
-    df = pd.read_csv('statement.csv', skiprows=2)
+    df = pd.read_csv('statement(1).csv', skiprows=2)
     df['date'] = pd.to_datetime(df['Transaction Date'], format='%Y%m%d')
     df['month'] = df['date'].dt.month
     df['year'] = df['date'].dt.year
     df['amount'] = df['Transaction Amount']
+    df = df.sort_values(by=['date'], ascending=False)
     return df
 
-def prompt_for_categorization(transaction, categorizer):
-    """Prompt user to manually categorize a transaction"""
-    # print("\n" + "=" * 50)
+def prompt_for_categorization(transaction, categorizer, learn=True):
     print("UNCATEGORIZED TRANSACTION:")
     print(f"Date: {transaction.date.strftime('%Y-%m-%d')}")
     print(f"Description: {transaction.description}")
@@ -21,9 +20,12 @@ def prompt_for_categorization(transaction, categorizer):
     category = input("Enter category (or 'skip' to leave uncategorized): ").strip()
 
     if category.lower() != 'skip' and category:
-        categorizer.learn_from_manual_entry(transaction.description, category)
         transaction.categorize(category)
-        print(f"✓ Learned rule: '{transaction.description}' → '{category}'")
+        if learn:
+            categorizer.learn_from_manual_entry(transaction.description, category)
+            print(f"✓ Learned rule: '{transaction.description}' → '{category}'")
+        else:
+            print(f"✓ Categorized: '{category}' (no learning)")
         return True
     return False
 

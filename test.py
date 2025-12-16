@@ -1,6 +1,7 @@
 import main
 
 df = main.read_and_clean_csv()
+df = df[df['month'] == 11]
 transactions = main.TransactionFactory.from_csv()
 
 # Test 3: Inspect individual transactions
@@ -12,7 +13,7 @@ for i, t in enumerate(transactions[:20]):
 categorizer = main.TransactionCategorizer()
 uncategorized = []
 
-for t in transactions[:5]:
+for t in transactions[:20]:
     if not categorizer.categorize(t):
         uncategorized.append(t)
 
