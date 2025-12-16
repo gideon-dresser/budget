@@ -1,0 +1,5 @@
+1. Import csv module
+2. Categorize transactions rule
+3. Manual transaction categorizaion interface
+4. Budget allotment interface
+5. Streamlit interface
